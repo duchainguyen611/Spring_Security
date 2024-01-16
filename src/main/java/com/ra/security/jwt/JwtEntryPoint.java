@@ -16,10 +16,10 @@ import java.io.IOException;
 @Component
 public class JwtEntryPoint implements AuthenticationEntryPoint {
 
-    private Logger logger = LoggerFactory.getLogger(JwtEntryPoint.class);
+    private final Logger logger = LoggerFactory.getLogger(JwtEntryPoint.class);
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        logger.error(authException.getMessage());
+        logger.error("un Authentication {}",authException.getMessage());
 //        ResponseEntity<String> responseEntity = new ResponseEntity<>("Un Authentication", HttpStatus.UNAUTHORIZED);
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.getWriter().write("Un Authentication");

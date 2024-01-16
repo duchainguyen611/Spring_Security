@@ -14,7 +14,7 @@ public class JwtProvider {
     private Long EXPIRED;
     @Value("${secret_key}")
     private String SECRET_KEY;
-    private Logger logger = LoggerFactory.getLogger(JwtEntryPoint.class);
+    private final Logger logger = LoggerFactory.getLogger(JwtEntryPoint.class);
     public String generateToken(UserPrinciple userPrinciple){
         String token = Jwts.builder().setSubject(userPrinciple.getUsername())
                 .setIssuedAt(new Date()).setExpiration(new Date(new Date().getTime()+EXPIRED)).

@@ -1,5 +1,6 @@
 package com.ra.config;
 
+import com.ra.security.jwt.AccessDenied;
 import com.ra.security.jwt.JwtEntryPoint;
 import com.ra.security.jwt.JwtTokenFilter;
 import com.ra.security.user_principal.UserDetailService;
@@ -28,6 +29,8 @@ public class WebSecurityConfig {
     private JwtEntryPoint jwtEntryPoint;
     @Autowired
     private JwtTokenFilter jwtTokenFilter;
+    @Autowired
+    private AccessDenied accessDenied;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity.csrf(AbstractHttpConfigurer::disable)

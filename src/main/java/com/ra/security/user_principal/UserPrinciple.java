@@ -1,6 +1,6 @@
 package com.ra.security.user_principal;
 
-import com.ra.model.entity.User;
+import com.ra.model.entity.Users;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,7 +14,7 @@ import java.util.Collection;
 @Builder
 @Data
 public class UserPrinciple implements UserDetails {
-    private User user;
+    private Users user;
     private Collection<? extends GrantedAuthority> authorities;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
