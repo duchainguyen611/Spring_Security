@@ -1,6 +1,5 @@
 package com.ra.model.dto.response;
 
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,7 +10,8 @@ import java.util.Set;
 @AllArgsConstructor
 @Data
 @Builder
-public class JwtResponse {
+public class UserResponse {
+    private Long id;
     private String accessToken;
     private final String type = "Bearer";
     private String fullName;

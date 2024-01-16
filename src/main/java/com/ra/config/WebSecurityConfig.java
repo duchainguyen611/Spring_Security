@@ -36,8 +36,8 @@ public class WebSecurityConfig {
         return httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .authenticationProvider(authenticationProvider())
                 .authorizeHttpRequests((auth)->
-                        auth.requestMatchers("/auth/**").permitAll()
-                                .requestMatchers("/admin/**").hasAuthority("ADMIN")
+                        auth.requestMatchers("/v1/auth/**").permitAll()
+                                .requestMatchers("v1/admin/categories").hasAuthority("ROLE_ADMIN").anyRequest().authenticated()
                 ).exceptionHandling((auth)->auth.authenticationEntryPoint(jwtEntryPoint))
                 .sessionManagement((auth)->auth.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class).build();
