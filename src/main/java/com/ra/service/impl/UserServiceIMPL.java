@@ -55,6 +55,7 @@ public class UserServiceIMPL implements UserService {
         return UserResponse.builder().
                 fullName(userPrinciple.getUser().getFullName()).
                 id(userPrinciple.getUser().getId()).accessToken(token).
+                status(userPrinciple.getUser().getStatus()).
                 Roles(userPrinciple.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet()))
                 .build();
     }

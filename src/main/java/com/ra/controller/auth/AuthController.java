@@ -7,6 +7,7 @@ import com.ra.model.dto.response.UserResponse;
 import com.ra.security.jwt.JwtProvider;
 import com.ra.security.user_principal.UserPrinciple;
 import com.ra.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,13 +28,13 @@ public class AuthController {
 
 
     @PostMapping("/sign-in")
-    public ResponseEntity<UserResponse> handleLogin(@RequestBody UserLogin userLogin){
+    public ResponseEntity<UserResponse> handleLogin(@RequestBody @Valid UserLogin userLogin){
         UserResponse userResponse = userService.handleLogin(userLogin);
         return new ResponseEntity<>(userResponse, HttpStatus.OK);
     }
 
     @PostMapping("/sign-up")
-    public ResponseEntity<String> handleRegister(@RequestBody UserRegister userRegister){
+    public ResponseEntity<String> handleRegister(@RequestBody @Valid UserRegister userRegister){
 //        Users users = userService.handleRegister(userRegister)
         return new ResponseEntity<>(userService.handleRegister(userRegister),HttpStatus.CREATED);
     }
