@@ -1,6 +1,6 @@
 package com.ra.security.user_principal;
 
-import com.ra.model.entity.Users;
+import com.ra.model.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,7 +14,7 @@ import java.util.Collection;
 @Builder
 @Data
 public class UserPrinciple implements UserDetails {
-    private Users user;
+    private User user;
     private Collection<? extends GrantedAuthority> authorities;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -48,6 +48,8 @@ public class UserPrinciple implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return this.user.getStatus();
+        return true;
     }
+
+
 }

@@ -4,6 +4,8 @@ import com.ra.security.jwt.AccessDenied;
 import com.ra.security.jwt.JwtEntryPoint;
 import com.ra.security.jwt.JwtTokenFilter;
 import com.ra.security.user_principal.UserDetailService;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,7 +23,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
+@EnableMethodSecurity(securedEnabled = true)
 public class WebSecurityConfig {
     @Autowired
     private UserDetailService userDetailService;
@@ -29,15 +31,16 @@ public class WebSecurityConfig {
     private JwtEntryPoint jwtEntryPoint;
     @Autowired
     private JwtTokenFilter jwtTokenFilter;
-    @Autowired
-    private AccessDenied accessDenied;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .authenticationProvider(authenticationProvider())
-                .authorizeHttpRequests((auth)->
-                        auth.requestMatchers("/v1/auth/**").permitAll()
-                                .requestMatchers("v1/admin/categories").hasAuthority("ROLE_ADMIN").anyRequest().authenticated()
+                .authorizeHttpRequests(
+                        (auth)-> auth
+                                .requestMatchers("/v1/auth/**").permitAll()
+                                .requestMatchers("/v1/admin/**").hasAuthority("ROLE_ADMIN")
+                                .anyRequest().authenticated()
                 ).exceptionHandling((auth)->auth.authenticationEntryPoint(jwtEntryPoint))
                 .sessionManagement((auth)->auth.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class).build();
@@ -55,4 +58,5 @@ public class WebSecurityConfig {
         authenticationProvider.setPasswordEncoder(passwordEncoder());
         return authenticationProvider;
     }
+
 }

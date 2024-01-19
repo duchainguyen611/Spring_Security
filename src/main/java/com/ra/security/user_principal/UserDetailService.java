@@ -1,6 +1,6 @@
 package com.ra.security.user_principal;
 
-import com.ra.model.entity.Users;
+import com.ra.model.entity.User;
 import com.ra.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,13 +18,13 @@ public class UserDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<Users> userOptional = userRepository.findByUserName(username);
+        Optional<User> userOptional = userRepository.findByUserName(username);
         if (userOptional.isPresent()){
-            Users user = userOptional.get();
+            User user = userOptional.get();
             return UserPrinciple.builder().
                     user(user).
                     authorities(user.getRoles().stream().
-                            map(item -> new SimpleGrantedAuthority(item.getRoleName())).toList())
+                            map(item -> new SimpleGrantedAuthority(item.getRoleName().toString())).toList())
                     .build();
         }
         return null;

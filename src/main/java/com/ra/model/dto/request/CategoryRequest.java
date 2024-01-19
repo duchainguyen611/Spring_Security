@@ -10,13 +10,11 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-public class UserLogin {
+public class CategoryRequest {
     @NotNull(message = "not Null")
     @NotEmpty(message = "not Empty")
     @NotBlank(message = "not Blank")
-    private String username;
-    @NotNull(message = "not Null")
-    @NotEmpty(message = "not Empty")
-    @NotBlank(message = "not Blank")
-    private String password;
+    private String categoryName;
+    private String description;
+    private Boolean status;
 }

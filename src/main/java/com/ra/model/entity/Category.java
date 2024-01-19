@@ -1,24 +1,30 @@
 package com.ra.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.util.List;
 
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 @Builder
 @Entity
+@Table(name = "category")
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long categoryId;
-    @Column(nullable = false)
+    private Long id;
     private String categoryName;
     private String description;
     private Boolean status;
+
+    @OneToMany(mappedBy = "category")
+    @JsonIgnore
+    List<Product> products;
+
 }
