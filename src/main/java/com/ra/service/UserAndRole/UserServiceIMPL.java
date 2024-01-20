@@ -41,6 +41,8 @@ public class UserServiceIMPL implements UserService {
     @Autowired
     private JwtProvider jwtProvider;
 
+    public static Long idUserLogin;
+
     @Override
     public UserResponse handleLogin(UserLogin userLogin) {
         Authentication authentication;
@@ -56,9 +58,8 @@ public class UserServiceIMPL implements UserService {
         }
         //tao ra 1 token
         String token = jwtProvider.generateToken(userPrinciple);
-
         // Convert sang doi tuong UserResponse
-        return UserResponse.builder().
+        UserResponse userResponse = UserResponse.builder().
                 fullName(userPrinciple.getUser().getFullName()).
                 id(userPrinciple.getUser().getId()).accessToken(token).
                 status(userPrinciple.getUser().getStatus()).
@@ -70,6 +71,8 @@ public class UserServiceIMPL implements UserService {
                 updatedAt(userPrinciple.getUser().getUpdatedAt()).
                 Roles(userPrinciple.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet()))
                 .build();
+        idUserLogin = userResponse.getId();
+        return userResponse;
     }
 
     @Override
@@ -102,9 +105,11 @@ public class UserServiceIMPL implements UserService {
     }
 
     @Override
-    public Page<UserInforToDisplay> findByKeyWordName(Pageable pageable,String KeyWord) {
-        Page<User> users = userRepository.findAllByUserNameContainingIgnoreCase(KeyWord, pageable);
-        return users.map(this::displayUser);
+    public List<UserInforToDisplay> findByKeyWord(String KeyWord) {
+        List<User> users = userRepository.findAllByUserName(KeyWord);
+        return users.stream()
+                .map(this::displayUser)
+                .collect(Collectors.toList());
     }
 
     @Override

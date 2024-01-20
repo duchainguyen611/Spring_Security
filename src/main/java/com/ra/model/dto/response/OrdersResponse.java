@@ -11,7 +11,6 @@ import java.time.LocalDate;
 @Setter
 @Builder
 public class OrdersResponse {
-    private Long id;
     private String serialNumber;
     private String totalPrice;
     private StatusOrders statusOrders;

@@ -1,4 +1,4 @@
-package com.ra.controller.admin;
+package com.ra.controller.Admin;
 
 import com.ra.model.entity.Role;
 import com.ra.service.UserAndRole.RoleService;

@@ -18,6 +18,6 @@ public class Address {
     private String receiveName;
 
     @ManyToOne
-    @JoinColumn(name = "user_id",referencedColumnName = "id")
+    @JoinColumn(name = "userId",referencedColumnName = "id")
     private User user;
 }

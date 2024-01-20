@@ -28,7 +28,6 @@ public class OrdersServiceIMPL implements OrdersService{
 
     public OrdersResponse convertOrdersToOrdersResponse(Orders orders){
         return OrdersResponse.builder()
-                .id(orders.getId())
                 .serialNumber(orders.getSerialNumber())
                 .totalPrice(orders.getTotalPrice())
                 .statusOrders(orders.getStatusOrders())

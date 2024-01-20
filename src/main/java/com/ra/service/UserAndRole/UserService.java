@@ -17,7 +17,7 @@ public interface UserService {
     UserResponse handleLogin(UserLogin userLogin);
     String handleRegister(UserRegister userRegister);
     Page<UserInforToDisplay> getAll(Pageable pageable);
-    Page<UserInforToDisplay> findByKeyWordName(Pageable pageable,String keyWord);
+    List<UserInforToDisplay> findByKeyWord(String keyWord);
     User findById(Long id);
     User save(User user);
     void delete(Long id);

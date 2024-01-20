@@ -1,4 +1,4 @@
-package com.ra.controller.admin;
+package com.ra.controller.Admin;
 
 import com.ra.model.dto.response.UserInforToDisplay;
 
@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/v1/admin/users")
@@ -40,8 +42,7 @@ public class UserController {
 
     @GetMapping("/search/{keyword}")
     public ResponseEntity<?> searchUser(@PathVariable("keyword") String keyword){
-        Pageable pageable = PageRequest.of(0,5);
-        Page<UserInforToDisplay> users = userService.findByKeyWordName(pageable,keyword);
+        List<UserInforToDisplay> users = userService.findByKeyWord(keyword);
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 }

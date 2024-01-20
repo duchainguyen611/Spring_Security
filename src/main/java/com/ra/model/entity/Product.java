@@ -36,7 +36,7 @@ public class Product {
     private LocalDate updatedAt;
 
     @ManyToOne
-    @JoinColumn(name = "category_id",referencedColumnName = "id")
+    @JoinColumn(name = "categoryId",referencedColumnName = "id")
     private Category category;
 
     @OneToMany(mappedBy = "product")

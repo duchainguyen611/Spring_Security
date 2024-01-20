@@ -33,7 +33,7 @@ public class Orders {
     private LocalDate receivedAt;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JoinColumn(name = "userId", referencedColumnName = "id")
     private User user;
 
     @OneToMany(mappedBy = "order")

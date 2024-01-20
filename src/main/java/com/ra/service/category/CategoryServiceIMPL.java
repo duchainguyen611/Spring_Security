@@ -21,6 +21,12 @@ public class CategoryServiceIMPL implements CategoryService{
     }
 
     @Override
+    public Page<CategoryResponse> getAllPermitAll(Pageable pageable) {
+        Page<Category> categories = categoryRepository.findAll(pageable);
+        return categories.map(this::convertCategoryToCategoryResponse);
+    }
+
+    @Override
     public Category findById(Long id) {
         return categoryRepository.findById(id).orElse(null);
     }

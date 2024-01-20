@@ -11,6 +11,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class ProductServiceIMPL implements ProductService{
     @Autowired
@@ -21,6 +24,36 @@ public class ProductServiceIMPL implements ProductService{
     public Page<Product> getAll(Pageable pageable) {
         return productRepository.findAll(pageable);
     }
+
+    @Override
+    public Page<ProductResponse> getAllPermitAll(Pageable pageable) {
+        Page<Product> products = productRepository.findAll(pageable);
+        return products.map(this::convertProductToProductResponse);
+    }
+
+    @Override
+    public List<ProductResponse> findByKeyWord(String keyWord) {
+        List<Product> products = productRepository.findByProductNameOrDescription(keyWord);
+        return products.stream()
+                .map(this::convertProductToProductResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public ProductResponse findByIdPermitAll(Long id) {
+        Product product = findById(id);
+        return convertProductToProductResponse(product);
+    }
+
+    @Override
+    public List<ProductResponse> findByCategoryId(Long id) {
+        Category category = categoryService.findById(id);
+        List<Product> products = productRepository.findAllByCategory(category);
+        return products.stream()
+                .map(this::convertProductToProductResponse)
+                .collect(Collectors.toList());
+    }
+
 
     @Override
     public Product findById(Long id) {
@@ -53,7 +86,7 @@ public class ProductServiceIMPL implements ProductService{
         Category category = categoryService.findById(product.getCategory().getId());
         return ProductResponse.builder()
                 .productName(product.getProductName())
-                .categoryId(category.getId())
+                .categoryName(category.getCategoryName())
                 .description(product.getDescription())
                 .unitPrice(product.getUnitPrice())
                 .image(product.getImage())

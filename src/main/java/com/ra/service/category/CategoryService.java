@@ -8,6 +8,8 @@ import org.springframework.data.domain.Pageable;
 
 public interface CategoryService {
     Page<Category> getAll(Pageable pageable);
+
+    Page<CategoryResponse> getAllPermitAll(Pageable pageable);
     Category findById(Long id);
     Category save(Category category);
     void delete(Long id);

@@ -12,9 +12,8 @@ import java.time.LocalDate;
 @Builder
 public class ProductResponse {
     private String productName;
-    private Long categoryId;
+    private String categoryName;
     private String description;
     private Float unitPrice;
     private String image;
-    private LocalDate createdAt;
 }

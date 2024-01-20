@@ -16,10 +16,10 @@ public class Shopping_Cart {
     private Integer orderQuantity;
 
     @ManyToOne
-    @JoinColumn(name = "product_id",referencedColumnName = "id")
+    @JoinColumn(name = "productId",referencedColumnName = "id")
     private Product product;
 
     @ManyToOne
-    @JoinColumn(name = "user_id",referencedColumnName = "id")
+    @JoinColumn(name = "userId",referencedColumnName = "id")
     private User user;
 }

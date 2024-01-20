@@ -1,14 +1,10 @@
-package com.ra.controller.admin;
+package com.ra.controller.Admin;
 
 
 import com.ra.model.dto.request.ProductRequest;
-import com.ra.model.entity.Category;
 import com.ra.model.entity.Product;
 
-import com.ra.service.category.CategoryService;
-import com.ra.service.category.CategoryServiceIMPL;
 import com.ra.service.product.ProductService;
-import com.ra.service.product.ProductServiceIMPL;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.UUID;
 
 @RestController

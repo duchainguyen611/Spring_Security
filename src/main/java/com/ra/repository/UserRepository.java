@@ -15,8 +15,7 @@ public interface UserRepository extends JpaRepository<User,Long> {
     Optional<User> findByUserName(String userName);
 
     boolean existsByUserName(String userName);
-    @Query(value = "SELECT u.* FROM User u join user_role ur on u.id=ur.user_id WHERE ur.role_id = 2", nativeQuery = true)
+    @Query(value = "SELECT u.* FROM User u join user_role ur on u.id=ur.userId WHERE ur.roleId = 2", nativeQuery = true)
     Page<User> findAllByUser(Pageable pageable);
-
-    Page<User> findAllByUserNameContainingIgnoreCase(String keyWord,Pageable pageable);
+    List<User> findAllByUserName(String keyWord);
 }
