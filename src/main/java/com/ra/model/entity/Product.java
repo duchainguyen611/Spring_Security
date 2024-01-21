@@ -29,7 +29,7 @@ public class Product {
     @Column(unique = true)
     private String productName;
     private String description;
-    private Float unitPrice;
+    private Double unitPrice;
     private Integer stockQuantity;
     private String image;
     private LocalDate createdAt;

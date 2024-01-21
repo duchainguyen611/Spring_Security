@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface ShoppingCartRepository extends JpaRepository<Shopping_Cart,Long> {
     Page<Shopping_Cart> findAllByUser(User user, Pageable pageable);
@@ -16,4 +18,6 @@ public interface ShoppingCartRepository extends JpaRepository<Shopping_Cart,Long
     Shopping_Cart findByIdAndUser(Integer id, User user);
 
     void deleteByUser(User user);
+
+    List<Shopping_Cart> findAllByUser(User user);
 }

@@ -7,8 +7,6 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-public class ShoppingCartResponse {
-    String productName;
-    Double unitPrice;
-    Integer orderQuantity;
+public class CheckOut {
+    Long addressId;
 }

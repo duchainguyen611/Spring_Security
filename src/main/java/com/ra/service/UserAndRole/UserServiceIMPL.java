@@ -80,8 +80,8 @@ public class UserServiceIMPL implements UserService {
     }
 
     private final Logger logger = LoggerFactory.getLogger(UserServiceIMPL.class);
-
-    private User userLogin() {
+    @Override
+    public User userLogin() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated()) {
             UserPrinciple userPrinciple = (UserPrinciple) authentication.getPrincipal();

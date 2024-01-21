@@ -25,16 +25,6 @@ public class AddressServiceIMPL implements AddressService{
     private UserService userService;
     private final Logger logger = LoggerFactory.getLogger(AddressServiceIMPL.class);
 
-    private User userLogin() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated()) {
-            UserPrinciple userPrinciple = (UserPrinciple) authentication.getPrincipal();
-            return userService.findById(userPrinciple.getUser().getId());
-        } else {
-            logger.error("User - AddressServiceIMPL - User id is not found.");
-            return null;
-        }
-    }
     @Override
     public Address addAddress(Address address) {
         return addressRepository.save(address);
@@ -46,18 +36,18 @@ public class AddressServiceIMPL implements AddressService{
             logger.error("ID Address not found in this User");
             throw new RuntimeException();
         }
-        addressRepository.deleteByUserAndId(userLogin(),id);
+        addressRepository.deleteByUserAndId(userService.userLogin(),id);
     }
 
     @Override
     public Page<AddressRequestAndResponse> getAll(Pageable pageable) {
-        Page<Address> addresses = addressRepository.findAllByUser(userLogin(),pageable);
+        Page<Address> addresses = addressRepository.findAllByUser(userService.userLogin(),pageable);
         return addresses.map(this::convertAddressToAddressResponse);
     }
 
     @Override
     public Address findAddressById(Long id) {
-        return addressRepository.findByIdAndUser(id,userLogin());
+        return addressRepository.findByIdAndUser(id,userService.userLogin());
     }
 
     public Address convertAddressRequestToAddress(AddressRequestAndResponse addressRequestAndResponse){
@@ -65,7 +55,7 @@ public class AddressServiceIMPL implements AddressService{
                 .fullAddress(addressRequestAndResponse.getFullAddress())
                 .receiveName(addressRequestAndResponse.getReceiveName())
                 .phone(addressRequestAndResponse.getPhone())
-                .user(userLogin())
+                .user(userService.userLogin())
                 .build();
     }
 

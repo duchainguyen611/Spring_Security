@@ -20,4 +20,6 @@ public interface ShoppingCartService {
     Shopping_Cart convertShoppingCartRequestToShoppingCart(ShoppingCartRequest shoppingCartRequest);
 
     ShoppingCartResponse convertShoppingCartToShoppingCartResponse(Shopping_Cart shoppingCart);
+
+    void checkOut(Long idAddress);
 }

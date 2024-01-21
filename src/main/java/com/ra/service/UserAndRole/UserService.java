@@ -26,6 +26,8 @@ public interface UserService {
     void updatePasswordAcc(UserToUpdatePassword userToUpdatePassword);
     UserResponseToUser displayInforAcc ();
     User save(User user);
+
+    User userLogin();
     void delete(Long id);
     UserResponseToAdmin displayUserToAdmin(User user);
     UserResponseToUser displayUserToUser(User user);

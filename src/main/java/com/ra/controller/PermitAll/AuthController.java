@@ -17,7 +17,6 @@ public class AuthController {
     @Autowired
     private UserService userService;
 
-
     @PostMapping("/log-in")
     public ResponseEntity<UserResponseToLogin> handleLogin(@RequestBody @Valid UserLogin userLogin){
         UserResponseToLogin userResponse = userService.handleLogin(userLogin);

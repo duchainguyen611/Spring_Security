@@ -1,18 +1,23 @@
 package com.ra.model.dto.response;
 
 import com.ra.model.entity.ENUM.StatusOrders;
+import com.ra.model.entity.Order_Detail;
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @Builder
-public class OrdersResponse {
+public class OrdersResponseToUserDetail {
     private String serialNumber;
-    private String totalPrice;
+    private Double totalPrice;
     private StatusOrders statusOrders;
     private String note;
     private String receiveName;
@@ -20,6 +25,5 @@ public class OrdersResponse {
     private String receivePhone;
     private LocalDate createdAt;
     private LocalDate receivedAt;
-    private Long userId;
-
+    private List<OrderDetailResponse> orderDetailResponses;
 }

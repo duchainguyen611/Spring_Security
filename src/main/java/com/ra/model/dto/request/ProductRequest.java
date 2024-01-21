@@ -28,7 +28,7 @@ public class ProductRequest {
     private Long categoryId;
     private String description;
     @Min(1)
-    private Float unitPrice;
+    private Double unitPrice;
     @Min(0)
     private Integer stockQuantity;
     private String image;

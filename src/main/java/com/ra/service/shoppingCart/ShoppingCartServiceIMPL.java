@@ -2,12 +2,14 @@ package com.ra.service.shoppingCart;
 
 import com.ra.model.dto.request.ShoppingCartRequest;
 import com.ra.model.dto.response.ShoppingCartResponse;
-import com.ra.model.entity.Product;
-import com.ra.model.entity.Shopping_Cart;
-import com.ra.model.entity.User;
+import com.ra.model.entity.*;
+import com.ra.model.entity.ENUM.StatusOrders;
 import com.ra.repository.ShoppingCartRepository;
 import com.ra.security.user_principal.UserPrinciple;
 import com.ra.service.UserAndRole.UserService;
+import com.ra.service.address.AddressService;
+import com.ra.service.orderDetail.OrderDetailService;
+import com.ra.service.orders.OrdersService;
 import com.ra.service.product.ProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,8 +21,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 @Service
 public class ShoppingCartServiceIMPL implements ShoppingCartService {
@@ -30,23 +34,17 @@ public class ShoppingCartServiceIMPL implements ShoppingCartService {
     UserService userService;
     @Autowired
     ProductService productService;
+    @Autowired
+    OrdersService ordersService;
+    @Autowired
+    AddressService addressService;
+    @Autowired
+    OrderDetailService orderDetailService;
 
-    private User userLogin() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated()) {
-            UserPrinciple userPrinciple = (UserPrinciple) authentication.getPrincipal();
-            return userService.findById(userPrinciple.getUser().getId());
-        } else {
-            logger.error("User - ShoppingCartServiceIMPL - User id is not found.");
-            return null;
-        }
-    }
-
-    private final Logger logger = LoggerFactory.getLogger(ShoppingCartServiceIMPL.class);
-
+    Logger logger = LoggerFactory.getLogger(ShoppingCartServiceIMPL.class);
     @Override
     public Page<ShoppingCartResponse> getAll(Pageable pageable) {
-        Page<Shopping_Cart> shoppingCarts = shoppingCartRepository.findAllByUser(userLogin(), pageable);
+        Page<Shopping_Cart> shoppingCarts = shoppingCartRepository.findAllByUser(userService.userLogin(), pageable);
         return shoppingCarts.map(this::convertShoppingCartToShoppingCartResponse);
     }
 
@@ -63,12 +61,12 @@ public class ShoppingCartServiceIMPL implements ShoppingCartService {
     @Transactional
     @Override
     public void deleteAllProduct() {
-        shoppingCartRepository.deleteByUser(userLogin());
+        shoppingCartRepository.deleteByUser(userService.userLogin());
     }
 
     @Override
     public Shopping_Cart findById(Integer Id) {
-        return shoppingCartRepository.findByIdAndUser(Id, userLogin());
+        return shoppingCartRepository.findByIdAndUser(Id, userService.userLogin());
     }
 
     public Shopping_Cart convertShoppingCartRequestToShoppingCart(ShoppingCartRequest shoppingCartRequest) {
@@ -79,7 +77,7 @@ public class ShoppingCartServiceIMPL implements ShoppingCartService {
         return Shopping_Cart.builder().
                 orderQuantity(shoppingCartRequest.getOrderQuantity()).
                 product(product).
-                user(userLogin()).
+                user(userService.userLogin()).
                 build();
     }
 
@@ -89,5 +87,40 @@ public class ShoppingCartServiceIMPL implements ShoppingCartService {
                 .unitPrice(shoppingCart.getProduct().getUnitPrice())
                 .orderQuantity(shoppingCart.getOrderQuantity())
                 .build();
+    }
+
+    @Transactional
+    @Override
+    public void checkOut(Long idAddress) {
+        Address address = addressService.findAddressById(idAddress);
+        if (address==null){
+            logger.error("ID Address not found in this User");
+            throw new RuntimeException();
+        }
+        Orders orders = new Orders();
+        orders.setSerialNumber(UUID.randomUUID().toString());
+        orders.setStatusOrders(StatusOrders.WAITING);
+        orders.setNote("");
+        orders.setCreatedAt(LocalDate.now());
+        orders.setReceiveName(address.getReceiveName());
+        orders.setReceiveAddress(address.getFullAddress());
+        orders.setReceivePhone(address.getPhone());
+        orders.setReceivedAt(LocalDate.now().plusDays(4));
+        List<Shopping_Cart> shoppingCarts = shoppingCartRepository.findAllByUser(userService.userLogin());
+        double sum = 0;
+        for (Shopping_Cart cart: shoppingCarts) {
+            sum+=cart.getOrderQuantity()*cart.getProduct().getUnitPrice();
+            Order_Detail order_detail = new Order_Detail();
+            order_detail.setName(cart.getProduct().getProductName());
+            order_detail.setOrder(orders);
+            order_detail.setOrderQuantity(cart.getOrderQuantity());
+            order_detail.setUnitPrice(cart.getProduct().getUnitPrice());
+            order_detail.setProduct(productService.findById(cart.getProduct().getId()));
+            orderDetailService.addOrderDetail(order_detail);
+        }
+        orders.setTotalPrice(sum);
+        orders.setUser(userService.userLogin());
+        ordersService.addOrders(orders);
+        deleteAllProduct();
     }
 }

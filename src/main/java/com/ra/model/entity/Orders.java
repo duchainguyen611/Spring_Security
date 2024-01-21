@@ -21,7 +21,7 @@ public class Orders {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String serialNumber;
-    private String totalPrice;
+    private Double totalPrice;
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private StatusOrders statusOrders;
@@ -39,5 +39,6 @@ public class Orders {
     @OneToMany(mappedBy = "order")
     @JsonIgnore
     List<Order_Detail> orderDetails;
+
 
 }

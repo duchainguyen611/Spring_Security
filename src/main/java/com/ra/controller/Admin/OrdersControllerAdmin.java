@@ -1,6 +1,6 @@
 package com.ra.controller.Admin;
 
-import com.ra.model.dto.response.OrdersResponse;
+import com.ra.model.dto.response.OrdersResponseToAdmin;
 import com.ra.model.entity.ENUM.StatusOrders;
 import com.ra.model.entity.Orders;
 import com.ra.service.orders.OrdersService;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/v1/admin/orders")
-public class OrdersController {
+public class OrdersControllerAdmin {
     @Autowired
     private OrdersService ordersService;
 
@@ -25,7 +25,7 @@ public class OrdersController {
             @RequestParam(defaultValue = "0", name = "page") int page,
             @RequestParam(defaultValue = "id", name = "sort")String sort){
         Pageable pageable = PageRequest.of(page,limit, Sort.by(sort));
-        Page<OrdersResponse> orders = ordersService.getAll(pageable);
+        Page<OrdersResponseToAdmin> orders = ordersService.getAll(pageable);
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 
