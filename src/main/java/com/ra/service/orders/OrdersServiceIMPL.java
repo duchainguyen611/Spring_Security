@@ -5,10 +5,9 @@ import com.ra.model.dto.response.OrdersResponseToUser;
 import com.ra.model.dto.response.OrdersResponseToAdmin;
 import com.ra.model.dto.response.OrdersResponseToUserDetail;
 import com.ra.model.entity.ENUM.StatusOrders;
-import com.ra.model.entity.Order_Detail;
 import com.ra.model.entity.Orders;
 import com.ra.repository.OrdersRepository;
-import com.ra.service.UserAndRole.UserService;
+import com.ra.service.user.UserService;
 import com.ra.service.orderDetail.OrderDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,7 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class OrdersServiceIMPL implements OrdersService{
+public class OrdersServiceIMPL implements OrdersService {
 
     @Autowired
     private OrdersRepository ordersRepository;
@@ -42,24 +41,32 @@ public class OrdersServiceIMPL implements OrdersService{
 
     @Override
     public void addOrders(Orders orders) {
-         ordersRepository.save(orders);
+        ordersRepository.save(orders);
     }
 
     @Override
     public Page<OrdersResponseToUser> getAllByUser(Pageable pageable) {
-        Page<Orders> orders = ordersRepository.findAllByUser(userService.userLogin(),pageable);
+        Page<Orders> orders = ordersRepository.findAllByUser(userService.userLogin(), pageable);
         return orders.map(this::convertOrdersToOrdersResponseUser);
     }
 
     @Override
     public List<OrdersResponseToUserDetail> getBySerialNumber(String serial) {
-        List<Orders> orders = ordersRepository.findAllBySerialNumberContainingIgnoreCase(serial);
+        List<Orders> orders = ordersRepository.findAllBySerialNumberContainingIgnoreCase(serial, userService.userLogin().getId());
         return orders.stream()
                 .map(this::convertOrdersToOrdersResponseUserDetail)
                 .collect(Collectors.toList());
     }
 
-    public OrdersResponseToAdmin convertOrdersToOrdersResponseAdmin(Orders orders){
+    @Override
+    public List<OrdersResponseToUserDetail> getByStatus(String status) {
+        List<Orders> orders = ordersRepository.findAllByStatusOrdersContainingIgnoreCase(status, userService.userLogin().getId());
+        return orders.stream()
+                .map(this::convertOrdersToOrdersResponseUserDetail)
+                .collect(Collectors.toList());
+    }
+
+    public OrdersResponseToAdmin convertOrdersToOrdersResponseAdmin(Orders orders) {
         return OrdersResponseToAdmin.builder()
                 .serialNumber(orders.getSerialNumber())
                 .totalPrice(orders.getTotalPrice())
@@ -73,7 +80,7 @@ public class OrdersServiceIMPL implements OrdersService{
                 .build();
     }
 
-    public OrdersResponseToUser convertOrdersToOrdersResponseUser(Orders orders){
+    public OrdersResponseToUser convertOrdersToOrdersResponseUser(Orders orders) {
         return OrdersResponseToUser.builder()
                 .serialNumber(orders.getSerialNumber())
                 .totalPrice(orders.getTotalPrice())
@@ -82,7 +89,7 @@ public class OrdersServiceIMPL implements OrdersService{
                 .build();
     }
 
-    public OrdersResponseToUserDetail convertOrdersToOrdersResponseUserDetail(Orders orders){
+    public OrdersResponseToUserDetail convertOrdersToOrdersResponseUserDetail(Orders orders) {
         List<OrderDetailResponse> orderDetailResponses = orderDetailService.findByOrder(orders);
         return OrdersResponseToUserDetail.builder()
                 .serialNumber(orders.getSerialNumber())

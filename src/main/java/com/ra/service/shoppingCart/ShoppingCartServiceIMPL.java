@@ -5,8 +5,7 @@ import com.ra.model.dto.response.ShoppingCartResponse;
 import com.ra.model.entity.*;
 import com.ra.model.entity.ENUM.StatusOrders;
 import com.ra.repository.ShoppingCartRepository;
-import com.ra.security.user_principal.UserPrinciple;
-import com.ra.service.UserAndRole.UserService;
+import com.ra.service.user.UserService;
 import com.ra.service.address.AddressService;
 import com.ra.service.orderDetail.OrderDetailService;
 import com.ra.service.orders.OrdersService;
@@ -16,14 +15,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 @Service

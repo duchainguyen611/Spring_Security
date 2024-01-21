@@ -1,4 +1,4 @@
-package com.ra.service.UserAndRole;
+package com.ra.service.user;
 
 
 import com.ra.model.dto.request.UserLogin;

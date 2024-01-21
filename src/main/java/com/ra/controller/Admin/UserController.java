@@ -3,7 +3,7 @@ package com.ra.controller.Admin;
 import com.ra.model.dto.response.UserResponseToAdmin;
 
 import com.ra.model.entity.User;
-import com.ra.service.UserAndRole.UserService;
+import com.ra.service.user.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

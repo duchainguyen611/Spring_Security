@@ -4,7 +4,7 @@ import com.ra.model.dto.request.UserToUpdateInfor;
 import com.ra.model.dto.request.UserToUpdatePassword;
 import com.ra.model.dto.response.UserResponseToUser;
 import com.ra.model.entity.User;
-import com.ra.service.UserAndRole.UserService;
+import com.ra.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -27,10 +27,15 @@ public class OrdersControllerUser {
         return new ResponseEntity<>(orderResponseToUsers, HttpStatus.OK);
     }
 
-    @GetMapping("/{serial}")
-    public ResponseEntity<?> getOrderDetail(@PathVariable String serial){
+    @GetMapping("/serial={serial}")
+    public ResponseEntity<?> getOrderDetailBySerial(@PathVariable String serial){
         List<OrdersResponseToUserDetail> ordersResponseToUserDetails = ordersService.getBySerialNumber(serial);
         return new ResponseEntity<>(ordersResponseToUserDetails,HttpStatus.OK);
     }
 
+    @GetMapping("/orderStatus={orderStatus}")
+    public ResponseEntity<?> getOrderDetailByStatus(@PathVariable String orderStatus){
+        List<OrdersResponseToUserDetail> ordersResponseToUserDetails = ordersService.getByStatus(orderStatus);
+        return new ResponseEntity<>(ordersResponseToUserDetails,HttpStatus.OK);
+    }
 }

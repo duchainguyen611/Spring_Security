@@ -19,4 +19,6 @@ public interface OrdersService {
     Page<OrdersResponseToUser> getAllByUser(Pageable pageable);
 
     List<OrdersResponseToUserDetail> getBySerialNumber(String serial);
+
+    List<OrdersResponseToUserDetail> getByStatus(String status);
 }

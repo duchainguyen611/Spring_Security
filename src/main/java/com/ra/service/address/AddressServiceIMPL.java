@@ -2,17 +2,13 @@ package com.ra.service.address;
 
 import com.ra.model.dto.request.AddressRequestAndResponse;
 import com.ra.model.entity.Address;
-import com.ra.model.entity.User;
 import com.ra.repository.AddressRepository;
-import com.ra.security.user_principal.UserPrinciple;
-import com.ra.service.UserAndRole.UserService;
+import com.ra.service.user.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

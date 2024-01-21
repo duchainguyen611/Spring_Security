@@ -4,7 +4,7 @@ package com.ra.controller.PermitAll;
 import com.ra.model.dto.request.UserLogin;
 import com.ra.model.dto.request.UserRegister;
 import com.ra.model.dto.response.UserResponseToLogin;
-import com.ra.service.UserAndRole.UserService;
+import com.ra.service.user.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
