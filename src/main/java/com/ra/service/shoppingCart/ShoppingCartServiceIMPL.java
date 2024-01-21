@@ -37,7 +37,7 @@ public class ShoppingCartServiceIMPL implements ShoppingCartService {
             UserPrinciple userPrinciple = (UserPrinciple) authentication.getPrincipal();
             return userService.findById(userPrinciple.getUser().getId());
         } else {
-            logger.error("User - ShoppingCartController - User id is not found.");
+            logger.error("User - ShoppingCartServiceIMPL - User id is not found.");
             return null;
         }
     }
@@ -59,6 +59,7 @@ public class ShoppingCartServiceIMPL implements ShoppingCartService {
     public void deleteOneProduct(Long id) {
         shoppingCartRepository.deleteById(id);
     }
+
     @Transactional
     @Override
     public void deleteAllProduct() {
@@ -66,13 +67,13 @@ public class ShoppingCartServiceIMPL implements ShoppingCartService {
     }
 
     @Override
-    public Shopping_Cart findById(Long Id) {
-        return shoppingCartRepository.findShopping_CartByById(Id, Objects.requireNonNull(userLogin()).getId());
+    public Shopping_Cart findById(Integer Id) {
+        return shoppingCartRepository.findByIdAndUser(Id, userLogin());
     }
 
     public Shopping_Cart convertShoppingCartRequestToShoppingCart(ShoppingCartRequest shoppingCartRequest) {
         Product product = productService.findById(shoppingCartRequest.getProductId());
-        if (product==null){
+        if (product == null) {
             throw new RuntimeException();
         }
         return Shopping_Cart.builder().

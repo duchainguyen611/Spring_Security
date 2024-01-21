@@ -159,13 +159,13 @@ public class UserServiceIMPL implements UserService {
     @Override
     public void updatePasswordAcc(UserToUpdatePassword userToUpdatePassword) {
         User user = inforLoginAcc();
-        if (!passwordEncoder.matches(userToUpdatePassword.getOldPassword(),user.getPassWord())) {
+        if (!passwordEncoder.matches(userToUpdatePassword.getOldPassword(), user.getPassWord())) {
             logger.error("Old password not true!");
             throw new RuntimeException();
-        }else if (userToUpdatePassword.getNewPassword().equals(userToUpdatePassword.getOldPassword())) {
+        } else if (userToUpdatePassword.getNewPassword().equals(userToUpdatePassword.getOldPassword())) {
             logger.error("New password must be different Old password!");
             throw new RuntimeException();
-        }else if (!userToUpdatePassword.getNewPassword().equals(userToUpdatePassword.getNewPasswordConfirm())) {
+        } else if (!userToUpdatePassword.getNewPassword().equals(userToUpdatePassword.getNewPasswordConfirm())) {
             logger.error("New password confirm must like new password!");
             throw new RuntimeException();
         }

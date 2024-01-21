@@ -15,7 +15,7 @@ public interface ShoppingCartService {
 
     void deleteAllProduct();
 
-    Shopping_Cart findById(Long Id);
+    Shopping_Cart findById(Integer Id);
 
     Shopping_Cart convertShoppingCartRequestToShoppingCart(ShoppingCartRequest shoppingCartRequest);
 

@@ -40,7 +40,7 @@ public class ShoppingCartController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ShoppingCartResponse> updateQuantity(@PathVariable Long id,@RequestBody ShoppingCartRequest shoppingCartRequest){
+    public ResponseEntity<ShoppingCartResponse> updateQuantity(@PathVariable Integer id,@RequestBody ShoppingCartRequest shoppingCartRequest){
         Shopping_Cart shoppingCartSearch = shoppingCartService.findById(id);
         if (shoppingCartSearch==null){
             throw new RuntimeException();

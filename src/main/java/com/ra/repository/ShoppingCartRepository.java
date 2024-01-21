@@ -12,8 +12,8 @@ import org.springframework.stereotype.Repository;
 public interface ShoppingCartRepository extends JpaRepository<Shopping_Cart,Long> {
     Page<Shopping_Cart> findAllByUser(User user, Pageable pageable);
 
-    @Query(value = "SELECT sc.* FROM shopping_cart sc WHERE sc.id = ?1 and sc.userId = ?2", nativeQuery = true)
-    Shopping_Cart findShopping_CartByById(Long id,Long userId);
+//    @Query(value = "SELECT sc.* FROM shopping_cart sc WHERE sc.id = ?1 and sc.userId = ?2", nativeQuery = true)
+    Shopping_Cart findByIdAndUser(Integer id, User user);
 
     void deleteByUser(User user);
 }
