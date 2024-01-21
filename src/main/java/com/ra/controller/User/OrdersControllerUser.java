@@ -35,7 +35,7 @@ public class OrdersControllerUser {
 
     @GetMapping("/orderStatus={orderStatus}")
     public ResponseEntity<?> getOrderDetailByStatus(@PathVariable String orderStatus){
-        List<OrdersResponseToUserDetail> ordersResponseToUserDetails = ordersService.getByStatus(orderStatus);
+        List<OrdersResponseToUser> ordersResponseToUserDetails = ordersService.getByStatusUser(orderStatus);
         return new ResponseEntity<>(ordersResponseToUserDetails,HttpStatus.OK);
     }
 }

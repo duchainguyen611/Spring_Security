@@ -1,5 +1,6 @@
 package com.ra.service.orders;
 
+import com.ra.model.dto.request.StatusOrderRequest;
 import com.ra.model.dto.response.OrderDetailResponse;
 import com.ra.model.dto.response.OrdersResponseToUser;
 import com.ra.model.dto.response.OrdersResponseToAdmin;
@@ -9,6 +10,8 @@ import com.ra.model.entity.Orders;
 import com.ra.repository.OrdersRepository;
 import com.ra.service.user.UserService;
 import com.ra.service.orderDetail.OrderDetailService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,16 +30,12 @@ public class OrdersServiceIMPL implements OrdersService {
     @Autowired
     private OrderDetailService orderDetailService;
 
+    Logger logger = LoggerFactory.getLogger(OrdersServiceIMPL.class);
 
     @Override
     public Page<OrdersResponseToAdmin> getAll(Pageable pageable) {
         Page<Orders> orders = ordersRepository.findAll(pageable);
         return orders.map(this::convertOrdersToOrdersResponseAdmin);
-    }
-
-    @Override
-    public Page<Orders> getAllByStatus(StatusOrders statusOrders, Pageable pageable) {
-        return null;
     }
 
     @Override
@@ -59,13 +58,63 @@ public class OrdersServiceIMPL implements OrdersService {
     }
 
     @Override
-    public List<OrdersResponseToUserDetail> getByStatus(String status) {
-        List<Orders> orders = ordersRepository.findAllByStatusOrdersContainingIgnoreCase(status, userService.userLogin().getId());
+    public List<OrdersResponseToUser> getByStatusUser(String status) {
+        List<Orders> orders = ordersRepository.findAllByStatusOrdersContainingIgnoreCaseForUser(status, userService.userLogin().getId());
         return orders.stream()
-                .map(this::convertOrdersToOrdersResponseUserDetail)
+                .map(this::convertOrdersToOrdersResponseUser)
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<OrdersResponseToAdmin> getByStatusAdmin(String status) {
+        List<Orders> orders = ordersRepository.findAllByStatusOrdersContainingIgnoreCase(status);
+        if (orders.isEmpty()) {
+            logger.error("Status not found");
+            throw new RuntimeException();
+        }
+        return orders.stream()
+                .map(this::convertOrdersToOrdersResponseAdmin)
+                .collect(Collectors.toList());
+    }
+
+    public Orders findById(Long id) {
+        return ordersRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public OrdersResponseToUserDetail getOrderDetailAdminById(Long id) {
+        Orders orders = findById(id);
+        if (orders == null) {
+            logger.error("ID not found");
+            throw new RuntimeException();
+        }
+        return convertOrdersToOrdersResponseUserDetail(orders);
+    }
+
+    @Override
+    public Orders updateStatusOrders(Long id, StatusOrderRequest statusOrderRequest) {
+        Orders orders = findById(id);
+        if (orders == null) {
+            logger.error("ID not found");
+            throw new RuntimeException();
+        }
+        boolean check = false;
+        StatusOrders sto = null;
+        for (StatusOrders statusOrders : StatusOrders.values()) {
+            if (statusOrders.toString().equalsIgnoreCase(statusOrderRequest.getStatusOrders())) {
+                check = true;
+                sto = statusOrders;
+            }
+        }
+        if (!check) {
+            logger.error("Status not true");
+            throw new RuntimeException();
+        }
+        orders.setStatusOrders(sto);
+        return ordersRepository.save(orders);
+    }
+
+    @Override
     public OrdersResponseToAdmin convertOrdersToOrdersResponseAdmin(Orders orders) {
         return OrdersResponseToAdmin.builder()
                 .serialNumber(orders.getSerialNumber())

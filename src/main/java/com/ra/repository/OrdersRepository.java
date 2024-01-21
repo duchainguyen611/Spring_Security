@@ -15,9 +15,10 @@ import java.util.List;
 @Repository
 public interface OrdersRepository extends JpaRepository<Orders,Long> {
     Page<Orders> findAllByUser(User user, Pageable pageable);
-
     @Query(value = "SELECT o.* from orders o where serialNumber LIKE CONCAT('%', ?1, '%') and userId = ?2", nativeQuery = true)
     List<Orders> findAllBySerialNumberContainingIgnoreCase(String serialNumber,Long userId);
     @Query(value = "SELECT o.* from orders o where status LIKE CONCAT('%', ?1, '%') and userId = ?2", nativeQuery = true)
-    List<Orders> findAllByStatusOrdersContainingIgnoreCase(String status,Long userId);
+    List<Orders> findAllByStatusOrdersContainingIgnoreCaseForUser(String status,Long userId);
+    @Query(value = "SELECT o.* from orders o where status LIKE CONCAT('%', ?1, '%')", nativeQuery = true)
+    List<Orders> findAllByStatusOrdersContainingIgnoreCase(String status);
 }
