@@ -1,20 +1,16 @@
 package com.ra.model.dto.response;
 
-import com.ra.model.entity.User;
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.security.core.GrantedAuthority;
 
 import java.time.LocalDate;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @Builder
-public class UserResponse {
+public class UserResponseToLogin {
     private Long id;
     private String accessToken;
     private final String type = "Bearer";

@@ -1,6 +1,5 @@
 package com.ra.repository;
 
-import com.ra.model.dto.response.UserResponse;
 import com.ra.model.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

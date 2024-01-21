@@ -3,7 +3,7 @@ package com.ra.controller.PermitAll;
 
 import com.ra.model.dto.request.UserLogin;
 import com.ra.model.dto.request.UserRegister;
-import com.ra.model.dto.response.UserResponse;
+import com.ra.model.dto.response.UserResponseToLogin;
 import com.ra.service.UserAndRole.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +19,8 @@ public class AuthController {
 
 
     @PostMapping("/log-in")
-    public ResponseEntity<UserResponse> handleLogin(@RequestBody @Valid UserLogin userLogin){
-        UserResponse userResponse = userService.handleLogin(userLogin);
+    public ResponseEntity<UserResponseToLogin> handleLogin(@RequestBody @Valid UserLogin userLogin){
+        UserResponseToLogin userResponse = userService.handleLogin(userLogin);
         return new ResponseEntity<>(userResponse, HttpStatus.OK);
     }
 

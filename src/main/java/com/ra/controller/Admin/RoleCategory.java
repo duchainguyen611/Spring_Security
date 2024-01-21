@@ -1,7 +1,7 @@
 package com.ra.controller.Admin;
 
 import com.ra.model.entity.Role;
-import com.ra.service.UserAndRole.RoleService;
+import com.ra.service.role.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

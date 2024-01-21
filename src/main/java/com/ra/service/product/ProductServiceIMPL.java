@@ -20,6 +20,12 @@ public class ProductServiceIMPL implements ProductService{
     private ProductRepository productRepository;
     @Autowired
     private CategoryService categoryService;
+
+    @Override
+    public List<Product> findAll() {
+        return productRepository.findAll();
+    }
+
     @Override
     public Page<Product> getAll(Pageable pageable) {
         return productRepository.findAll(pageable);

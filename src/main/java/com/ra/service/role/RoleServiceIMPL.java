@@ -1,4 +1,4 @@
-package com.ra.service.UserAndRole;
+package com.ra.service.role;
 
 import com.ra.model.entity.ENUM.RoleName;
 import com.ra.model.entity.Role;

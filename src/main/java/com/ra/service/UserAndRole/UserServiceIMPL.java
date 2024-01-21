@@ -2,14 +2,20 @@ package com.ra.service.UserAndRole;
 
 import com.ra.model.dto.request.UserLogin;
 import com.ra.model.dto.request.UserRegister;
-import com.ra.model.dto.response.UserInforToDisplay;
-import com.ra.model.dto.response.UserResponse;
+import com.ra.model.dto.request.UserToUpdateInfor;
+import com.ra.model.dto.request.UserToUpdatePassword;
+import com.ra.model.dto.response.UserResponseToAdmin;
+import com.ra.model.dto.response.UserResponseToUser;
+import com.ra.model.dto.response.UserResponseToLogin;
 import com.ra.model.entity.ENUM.RoleName;
 import com.ra.model.entity.Role;
 import com.ra.model.entity.User;
 import com.ra.repository.UserRepository;
 import com.ra.security.jwt.JwtProvider;
 import com.ra.security.user_principal.UserPrinciple;
+import com.ra.service.role.RoleService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,12 +24,14 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -41,10 +49,8 @@ public class UserServiceIMPL implements UserService {
     @Autowired
     private JwtProvider jwtProvider;
 
-    public static Long idUserLogin;
-
     @Override
-    public UserResponse handleLogin(UserLogin userLogin) {
+    public UserResponseToLogin handleLogin(UserLogin userLogin) {
         Authentication authentication;
         try {
             authentication = authenticationProvider.
@@ -59,7 +65,7 @@ public class UserServiceIMPL implements UserService {
         //tao ra 1 token
         String token = jwtProvider.generateToken(userPrinciple);
         // Convert sang doi tuong UserResponse
-        UserResponse userResponse = UserResponse.builder().
+        return UserResponseToLogin.builder().
                 fullName(userPrinciple.getUser().getFullName()).
                 id(userPrinciple.getUser().getId()).accessToken(token).
                 status(userPrinciple.getUser().getStatus()).
@@ -71,8 +77,19 @@ public class UserServiceIMPL implements UserService {
                 updatedAt(userPrinciple.getUser().getUpdatedAt()).
                 Roles(userPrinciple.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet()))
                 .build();
-        idUserLogin = userResponse.getId();
-        return userResponse;
+    }
+
+    private final Logger logger = LoggerFactory.getLogger(UserServiceIMPL.class);
+
+    private User userLogin() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            UserPrinciple userPrinciple = (UserPrinciple) authentication.getPrincipal();
+            return findById(userPrinciple.getUser().getId());
+        } else {
+            logger.error("User - UserController - User id is not found.");
+            return null;
+        }
     }
 
     @Override
@@ -99,22 +116,61 @@ public class UserServiceIMPL implements UserService {
     }
 
     @Override
-    public Page<UserInforToDisplay> getAll(Pageable pageable) {
+    public Page<UserResponseToAdmin> getAll(Pageable pageable) {
         Page<User> users = userRepository.findAllByUser(pageable);
-        return users.map(this::displayUser);
+        return users.map(this::displayUserToAdmin);
     }
 
     @Override
-    public List<UserInforToDisplay> findByKeyWord(String KeyWord) {
+    public List<UserResponseToAdmin> findByKeyWord(String KeyWord) {
         List<User> users = userRepository.findAllByUserName(KeyWord);
         return users.stream()
-                .map(this::displayUser)
+                .map(this::displayUserToAdmin)
                 .collect(Collectors.toList());
     }
 
     @Override
     public User findById(Long id) {
         return userRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public User inforLoginAcc() {
+        return userRepository.findById(Objects.requireNonNull(userLogin()).getId()).orElse(null);
+    }
+
+    @Override
+    public UserResponseToUser displayInforAcc() {
+        User user = inforLoginAcc();
+        return displayUserToUser(user);
+    }
+
+    @Override
+    public User updateInforAcc(UserToUpdateInfor userToUpdateInfor) {
+        User user = inforLoginAcc();
+        user.setFullName(userToUpdateInfor.getFullName());
+        user.setEmail(userToUpdateInfor.getEmail());
+        user.setAvatar(userToUpdateInfor.getAvatar());
+        user.setPhone(userToUpdateInfor.getPhone());
+        user.setAddress(userToUpdateInfor.getAddress());
+        return save(user);
+    }
+
+    @Override
+    public void updatePasswordAcc(UserToUpdatePassword userToUpdatePassword) {
+        User user = inforLoginAcc();
+        if (!passwordEncoder.matches(userToUpdatePassword.getOldPassword(),user.getPassWord())) {
+            logger.error("Old password not true!");
+            throw new RuntimeException();
+        }else if (userToUpdatePassword.getNewPassword().equals(userToUpdatePassword.getOldPassword())) {
+            logger.error("New password must be different Old password!");
+            throw new RuntimeException();
+        }else if (!userToUpdatePassword.getNewPassword().equals(userToUpdatePassword.getNewPasswordConfirm())) {
+            logger.error("New password confirm must like new password!");
+            throw new RuntimeException();
+        }
+        user.setPassWord(passwordEncoder.encode(userToUpdatePassword.getNewPassword()));
+        save(user);
     }
 
     @Override
@@ -128,8 +184,8 @@ public class UserServiceIMPL implements UserService {
     }
 
     @Override
-    public UserInforToDisplay displayUser(User user) {
-        return UserInforToDisplay.builder()
+    public UserResponseToAdmin displayUserToAdmin(User user) {
+        return UserResponseToAdmin.builder()
                 .id(user.getId())
                 .fullName(user.getFullName())
                 .userName(user.getUserName())
@@ -141,6 +197,17 @@ public class UserServiceIMPL implements UserService {
                 .createdAt(user.getCreatedAt())
                 .updatedAt(user.getUpdatedAt())
                 .Roles(user.getRoles().toString())
+                .build();
+    }
+
+    public UserResponseToUser displayUserToUser(User user) {
+        return UserResponseToUser.builder()
+                .fullName(user.getFullName())
+                .userName(user.getUserName())
+                .Email(user.getEmail())
+                .avatar(user.getAvatar())
+                .phone(user.getPhone())
+                .address(user.getAddress())
                 .build();
     }
 
