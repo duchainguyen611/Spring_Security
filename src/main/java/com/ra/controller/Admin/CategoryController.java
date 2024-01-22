@@ -46,7 +46,6 @@ public class CategoryController {
     //Sua toan bo thong tin
     @PutMapping("/{id}")
     public ResponseEntity<Category> update(@RequestBody @Valid CategoryRequest categoryRequest,@PathVariable Long id){
-        categoryRequest.setStatus(true);
         Category categoryValue = categoryService.convertCategoryRequestToCategory(categoryRequest);
         categoryValue.setId(id);
         Category categoryUpdate = categoryService.save(categoryValue);

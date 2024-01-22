@@ -14,14 +14,20 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Repository
-public interface OrdersRepository extends JpaRepository<Orders,Long> {
+public interface OrdersRepository extends JpaRepository<Orders, Long> {
     Page<Orders> findAllByUser(User user, Pageable pageable);
+
     @Query(value = "SELECT o.* from orders o where serialNumber LIKE CONCAT('%', ?1, '%') and userId = ?2", nativeQuery = true)
-    List<Orders> findAllBySerialNumberContainingIgnoreCase(String serialNumber,Long userId);
+    List<Orders> findAllBySerialNumberContainingIgnoreCase(String serialNumber, Long userId);
+
     @Query(value = "SELECT o.* from orders o where status LIKE CONCAT('%', ?1, '%') and userId = ?2", nativeQuery = true)
-    List<Orders> findAllByStatusOrdersContainingIgnoreCaseForUser(String status,Long userId);
+    List<Orders> findAllByStatusOrdersContainingIgnoreCaseForUser(String status, Long userId);
+
     @Query(value = "SELECT o.* from orders o where status LIKE CONCAT('%', ?1, '%')", nativeQuery = true)
     List<Orders> findAllByStatusOrdersContainingIgnoreCase(String status);
+
     @Query(value = "SELECT sum(totalPrice) from orders where createdAt between ?1 and ?2", nativeQuery = true)
     Double totalPriceByTime(LocalDate startDate, LocalDate endDate);
+
+    Orders findByIdAndUserAndStatusOrders(Long id, User user, StatusOrders statusOrders);
 }

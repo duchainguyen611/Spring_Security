@@ -5,6 +5,7 @@ import com.ra.model.dto.request.UserToUpdatePassword;
 import com.ra.model.dto.response.UserResponseToUser;
 import com.ra.model.entity.User;
 import com.ra.service.user.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,13 +24,13 @@ public class UserAccountController {
     }
 
     @PutMapping("")
-    public ResponseEntity<UserResponseToUser> updateInforAccount(@RequestBody UserToUpdateInfor userToUpdateInfor){
+    public ResponseEntity<UserResponseToUser> updateInforAccount(@RequestBody @Valid UserToUpdateInfor userToUpdateInfor){
         User userUpdate = userService.updateInforAcc(userToUpdateInfor);
         return new ResponseEntity<>(userService.displayUserToUser(userUpdate), HttpStatus.OK);
     }
 
     @PutMapping("/change-password")
-    public ResponseEntity<?> updatePasswordAccount(@RequestBody UserToUpdatePassword userToUpdatePassword){
+    public ResponseEntity<?> updatePasswordAccount(@RequestBody @Valid UserToUpdatePassword userToUpdatePassword){
         userService.updatePasswordAcc(userToUpdatePassword);
         return new ResponseEntity<>("Change password success!",HttpStatus.OK);
     }

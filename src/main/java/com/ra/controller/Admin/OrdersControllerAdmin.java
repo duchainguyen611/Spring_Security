@@ -6,6 +6,7 @@ import com.ra.model.dto.response.OrdersResponseToUserDetail;
 import com.ra.model.entity.ENUM.StatusOrders;
 import com.ra.model.entity.Orders;
 import com.ra.service.orders.OrdersService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -46,7 +47,7 @@ public class OrdersControllerAdmin {
     }
 
     @PutMapping("/status/{id}")
-    public ResponseEntity<?> updateStatusOrders(@PathVariable Long id,@RequestBody StatusOrderRequest statusOrderRequest){
+    public ResponseEntity<?> updateStatusOrders(@PathVariable Long id,@RequestBody @Valid StatusOrderRequest statusOrderRequest){
         Orders orders = ordersService.updateStatusOrders(id,statusOrderRequest);
         OrdersResponseToAdmin ordersResponseToAdmin = ordersService.convertOrdersToOrdersResponseAdmin(orders);
         return new ResponseEntity<>(ordersResponseToAdmin,HttpStatus.OK);

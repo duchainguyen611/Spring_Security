@@ -11,11 +11,10 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-public class ShoppingCartRequest {
+public class CheckOut {
     @NotNull(message = "not Null")
     @NotEmpty(message = "not Empty")
     @NotBlank(message = "not Blank")
-    Long productId;
-    @Min(value = 1,message = "min = 1")
-    Integer orderQuantity;
+    @Min(value = 1, message = "min = 1")
+    Long addressId;
 }

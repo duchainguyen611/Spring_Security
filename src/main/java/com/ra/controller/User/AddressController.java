@@ -3,6 +3,7 @@ package com.ra.controller.User;
 import com.ra.model.dto.request.AddressRequestAndResponse;
 import com.ra.model.entity.Address;
 import com.ra.service.address.AddressService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,7 +20,7 @@ public class AddressController {
     private AddressService addressService;
 
     @PostMapping("")
-    public ResponseEntity<AddressRequestAndResponse> addAddress(@RequestBody AddressRequestAndResponse addressRequestAndResponse) {
+    public ResponseEntity<AddressRequestAndResponse> addAddress(@RequestBody @Valid AddressRequestAndResponse addressRequestAndResponse) {
         Address address = addressService.convertAddressRequestToAddress(addressRequestAndResponse);
         Address addressNew = addressService.addAddress(address);
         return new ResponseEntity<>(addressService.convertAddressToAddressResponse(addressNew), HttpStatus.CREATED);

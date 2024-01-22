@@ -1,10 +1,11 @@
 package com.ra.controller.User;
 
 import com.ra.model.dto.request.ShoppingCartRequest;
-import com.ra.model.dto.response.CheckOut;
+import com.ra.model.dto.request.CheckOut;
 import com.ra.model.dto.response.ShoppingCartResponse;
 import com.ra.model.entity.Shopping_Cart;
 import com.ra.service.shoppingCart.ShoppingCartService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,14 +32,14 @@ public class ShoppingCartController {
     }
 
     @PostMapping("")
-    public ResponseEntity<ShoppingCartResponse> addProduct(@RequestBody ShoppingCartRequest shoppingCartRequest){
+    public ResponseEntity<ShoppingCartResponse> addProduct(@RequestBody @Valid ShoppingCartRequest shoppingCartRequest){
         Shopping_Cart shoppingCart = shoppingCartService.convertShoppingCartRequestToShoppingCart(shoppingCartRequest);
         Shopping_Cart shoppingCartNew = shoppingCartService.save(shoppingCart);
         return new ResponseEntity<>(shoppingCartService.convertShoppingCartToShoppingCartResponse(shoppingCartNew),HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ShoppingCartResponse> updateQuantity(@PathVariable Integer id,@RequestBody ShoppingCartRequest shoppingCartRequest){
+    public ResponseEntity<ShoppingCartResponse> updateQuantity(@PathVariable Integer id,@RequestBody @Valid ShoppingCartRequest shoppingCartRequest){
         Shopping_Cart shoppingCartSearch = shoppingCartService.findById(id);
         if (shoppingCartSearch==null){
             throw new RuntimeException();
@@ -61,7 +62,7 @@ public class ShoppingCartController {
     }
 
     @PostMapping("/checkout")
-    public ResponseEntity<?> checkOut(@RequestBody CheckOut checkOut){
+    public ResponseEntity<?> checkOut(@RequestBody @Valid CheckOut checkOut){
         shoppingCartService.checkOut(checkOut.getAddressId());
         return new ResponseEntity<>("Check Out success!",HttpStatus.OK);
     }

@@ -27,6 +27,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -91,7 +92,7 @@ public class UserServiceIMPL implements UserService {
             return null;
         }
     }
-
+    @Transactional
     @Override
     public String handleRegister(UserRegister userRegister) {
         if (userRepository.existsByUserName(userRegister.getUsername())) {
@@ -196,7 +197,7 @@ public class UserServiceIMPL implements UserService {
                 .address(user.getAddress())
                 .createdAt(user.getCreatedAt())
                 .updatedAt(user.getUpdatedAt())
-                .Roles(user.getRoles().toString())
+                .roleName(user.getRoles().stream().map(role -> role.getRoleName().name()).toList())
                 .build();
     }
 

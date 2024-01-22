@@ -4,6 +4,7 @@ import com.ra.model.dto.request.WishListRequest;
 import com.ra.model.dto.response.WishListResponse;
 import com.ra.model.entity.Wish_List;
 import com.ra.service.wishList.WishListService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,7 +21,7 @@ public class WishListController {
     private WishListService wishListService;
 
     @PostMapping("")
-    public ResponseEntity<WishListResponse> addProductToWishList(@RequestBody WishListRequest wishListRequest) {
+    public ResponseEntity<WishListResponse> addProductToWishList(@RequestBody @Valid WishListRequest wishListRequest) {
         Wish_List wish_list = wishListService.convertWishListRequestToWishListR(wishListRequest);
         Wish_List wish_listNew = wishListService.addProduct(wish_list);
         return new ResponseEntity<>(wishListService.convertWishListToWishListResponse(wish_listNew), HttpStatus.CREATED);

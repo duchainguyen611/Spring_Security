@@ -15,15 +15,12 @@ import java.util.List;
 public interface OrdersService {
     Page<OrdersResponseToAdmin> getAll(Pageable pageable);
     void addOrders(Orders orders);
-
     Page<OrdersResponseToUser> getAllByUser(Pageable pageable);
-
     List<OrdersResponseToUserDetail> getBySerialNumber(String serial);
-
     List<OrdersResponseToUser> getByStatusUser(String status);
-
     List<OrdersResponseToAdmin> getByStatusAdmin(String status);
     OrdersResponseToUserDetail getOrderDetailAdminById(Long id);
     Orders updateStatusOrders(Long id, StatusOrderRequest statusOrderRequest);
     OrdersResponseToAdmin convertOrdersToOrdersResponseAdmin(Orders orders);
+    OrdersResponseToUser updateOrderStatusWaitingToCancel(Long id);
 }

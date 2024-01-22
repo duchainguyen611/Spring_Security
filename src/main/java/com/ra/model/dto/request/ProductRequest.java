@@ -27,9 +27,9 @@ public class ProductRequest {
     @NotNull(message = "not Null")
     private Long categoryId;
     private String description;
-    @Min(1)
+    @Min(value = 1,message = "min = 1")
     private Double unitPrice;
-    @Min(0)
+    @Min(value = 1,message = "min = 1")
     private Integer stockQuantity;
     private String image;
     private LocalDate createdAt;

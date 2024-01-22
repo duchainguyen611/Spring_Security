@@ -6,16 +6,21 @@ import com.ra.model.entity.Category;
 import com.ra.model.entity.Product;
 import com.ra.repository.ProductRepository;
 import com.ra.service.category.CategoryService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-public class ProductServiceIMPL implements ProductService{
+public class ProductServiceIMPL implements ProductService {
     @Autowired
     private ProductRepository productRepository;
     @Autowired
@@ -66,9 +71,24 @@ public class ProductServiceIMPL implements ProductService{
         return productRepository.findById(id).orElse(null);
     }
 
+    @Transactional
     @Override
-    public Product save(Product product) {
-        return productRepository.save(product);
+    public Product save(ProductRequest productRequest) {
+        Product productValue = convertProductRequestToProduct(productRequest);
+        productValue.setCreatedAt(LocalDate.now());
+        productValue.setSku(UUID.randomUUID().toString());
+        return productRepository.save(productValue);
+    }
+
+    @Transactional
+    @Override
+    public Product update(ProductRequest productRequest, Long id) {
+        Product productValue = convertProductRequestToProduct(productRequest);
+        productValue.setUpdatedAt(LocalDate.now());
+        productValue.setId(id);
+        productValue.setSku(findById(id).getSku());
+        productValue.setCreatedAt(findById(id).getCreatedAt());
+        return productRepository.save(productValue);
     }
 
     @Override
@@ -76,7 +96,7 @@ public class ProductServiceIMPL implements ProductService{
         productRepository.deleteById(id);
     }
 
-    public Product convertProductRequestToProduct(ProductRequest productRequest){
+    public Product convertProductRequestToProduct(ProductRequest productRequest) {
         Category category = categoryService.findById(productRequest.getCategoryId());
         return Product.builder()
                 .productName(productRequest.getProductName())
@@ -88,7 +108,7 @@ public class ProductServiceIMPL implements ProductService{
                 .build();
     }
 
-    public ProductResponse convertProductToProductResponse(Product product){
+    public ProductResponse convertProductToProductResponse(Product product) {
         Category category = categoryService.findById(product.getCategory().getId());
         return ProductResponse.builder()
                 .productName(product.getProductName())

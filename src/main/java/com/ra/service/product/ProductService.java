@@ -19,7 +19,8 @@ public interface ProductService {
     List<ProductResponse> findByCategoryId(Long id);
 
     Product findById(Long id);
-    Product save(Product product);
+    Product save(ProductRequest productRequest);
+    Product update(ProductRequest productRequest,Long id);
     void delete(Long id);
     Product convertProductRequestToProduct(ProductRequest productRequest);
 

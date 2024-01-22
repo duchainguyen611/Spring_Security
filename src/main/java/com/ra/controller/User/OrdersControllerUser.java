@@ -1,5 +1,6 @@
 package com.ra.controller.User;
 
+import com.ra.model.dto.response.OrdersResponseToAdmin;
 import com.ra.model.dto.response.OrdersResponseToUser;
 import com.ra.model.dto.response.OrdersResponseToUserDetail;
 import com.ra.service.orders.OrdersService;
@@ -37,5 +38,11 @@ public class OrdersControllerUser {
     public ResponseEntity<?> getOrderDetailByStatus(@PathVariable String orderStatus){
         List<OrdersResponseToUser> ordersResponseToUserDetails = ordersService.getByStatusUser(orderStatus);
         return new ResponseEntity<>(ordersResponseToUserDetails,HttpStatus.OK);
+    }
+
+    @GetMapping("/cancel/{id}")
+    public ResponseEntity<OrdersResponseToUser> updateStatusToCancel(@PathVariable Long id){
+        OrdersResponseToUser ordersResponseToUser = ordersService.updateOrderStatusWaitingToCancel(id);
+        return new ResponseEntity<>(ordersResponseToUser,HttpStatus.OK);
     }
 }

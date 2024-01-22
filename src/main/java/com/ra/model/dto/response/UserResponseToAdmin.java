@@ -1,8 +1,11 @@
 package com.ra.model.dto.response;
 
+import com.ra.model.entity.Role;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,6 +23,6 @@ public class UserResponseToAdmin {
     private String address;
     private LocalDate createdAt;
     private LocalDate updatedAt;
-    private String Roles;
+    private List<String> roleName;
 
 }

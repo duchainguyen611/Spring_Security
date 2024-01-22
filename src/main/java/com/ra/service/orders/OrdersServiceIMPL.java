@@ -115,6 +115,14 @@ public class OrdersServiceIMPL implements OrdersService {
     }
 
     @Override
+    public OrdersResponseToUser updateOrderStatusWaitingToCancel(Long id) {
+        Orders orders = ordersRepository.findByIdAndUserAndStatusOrders(id,userService.userLogin(),StatusOrders.WAITING);
+        orders.setStatusOrders(StatusOrders.CANCEL);
+        Orders ordersNew = ordersRepository.save(orders);
+        return convertOrdersToOrdersResponseUser(ordersNew);
+    }
+
+    @Override
     public OrdersResponseToAdmin convertOrdersToOrdersResponseAdmin(Orders orders) {
         return OrdersResponseToAdmin.builder()
                 .serialNumber(orders.getSerialNumber())
@@ -128,6 +136,8 @@ public class OrdersServiceIMPL implements OrdersService {
                 .userId(orders.getUser().getId())
                 .build();
     }
+
+
 
     public OrdersResponseToUser convertOrdersToOrdersResponseUser(Orders orders) {
         return OrdersResponseToUser.builder()
