@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -21,4 +22,6 @@ public interface OrdersRepository extends JpaRepository<Orders,Long> {
     List<Orders> findAllByStatusOrdersContainingIgnoreCaseForUser(String status,Long userId);
     @Query(value = "SELECT o.* from orders o where status LIKE CONCAT('%', ?1, '%')", nativeQuery = true)
     List<Orders> findAllByStatusOrdersContainingIgnoreCase(String status);
+    @Query(value = "SELECT sum(totalPrice) from orders where createdAt between ?1 and ?2", nativeQuery = true)
+    Double totalPriceByTime(LocalDate startDate, LocalDate endDate);
 }
